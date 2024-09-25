@@ -21,19 +21,20 @@ BOT_USERNAME = os.getenv("BOT_USERNAME")
 
 
 # - commands for the bot  - initial, need logic.
-async def start_command(update: Update):
+async def start_command(update: Update, Context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Hi! I am Slim_Bot. I can help you find the latest videos from YouTube.")
 
 
-async def help_command(update: Update):
-    await update.message.reply_text("Here is a list of the commands available.")
+async def help_command(update: Update, Context: ContextTypes.DEFAULT_TYPE):
+    help_message = "Here is a list of the commands available. \ntype /start to start the bot  \ntype /help to get help  \ntype /custom to provide a custom command  \ntype /video to search for a video"
+    await update.message.reply_text(help_message)
 
 
-async def custom_command(update: Update):
+async def custom_command(update: Update, Context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Hi! I am Slim0_1 Bot. I can help you find the latest videos from YouTube.")
 
 
-
+# ---  Messages and responses handling -------------------------------- 
 async def handle_message(update: Update, Context: ContextTypes.DEFAULT_TYPE):
     message_type = update.message.chat.type
     text = update.message.text
@@ -94,5 +95,8 @@ if __name__ == '__main__':
     # messages
     app.add_handler(MessageHandler(filters.TEXT, handle_message))
 
-    print("polling")
+    #Errors
+    app.add_error_handler(error)
+
+    print("Polling...")
     app.run_polling(poll_interval=3)
