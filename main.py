@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 
 from typing import Final
 
+import telegram
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, ContextTypes, filters
 
@@ -25,13 +26,17 @@ async def start_command(update: Update, Context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Hi! I am Slim_Bot. I can help you find the latest videos from YouTube.")
 
 
-async def help_command(update: Update, Context: ContextTypes.DEFAULT_TYPE):
-    help_message = "Here is a list of the commands available. \ntype /start to start the bot  \ntype /help to get help  \ntype /custom to provide a custom command  \ntype /video to search for a video"
-    await update.message.reply_text(help_message)
+
+
+async def help_command(update: Update, Context: ContextTypes.DEFAULT_TYPE, ):
+    with open("command_list.md", "r") as command_file:
+        markdown_content = command_file.read()
+    await update.message.reply_text(markdown_content, parse_mode=telegram.constants.ParseMode.MARKDOWN )
+
 
 
 async def custom_command(update: Update, Context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Hi! I am Slim0_1 Bot. I can help you find the latest videos from YouTube.")
+    await update.message.reply_text("Hi! Custom command to be implemented")
 
 
 # ---  Messages and responses handling -------------------------------- 
@@ -39,7 +44,7 @@ async def handle_message(update: Update, Context: ContextTypes.DEFAULT_TYPE):
     message_type = update.message.chat.type
     text = update.message.text
 
-    print(f"User ({update.message.chat.id}) in {message_type}: '{text}'")
+    print(f"User ({update.message.chat.id}) // {message_type} chat: '{text}'")
 
     if message_type in ["group", "supergroup"]:
         if BOT_USERNAME in text:
@@ -50,7 +55,7 @@ async def handle_message(update: Update, Context: ContextTypes.DEFAULT_TYPE):
     else:
         response = handle_response(text)
 
-    print("Bot", response)
+    print("Bot:", response)
     await update.message.reply_text(response)
 
 
