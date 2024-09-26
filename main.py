@@ -1,5 +1,8 @@
 import os
 from dotenv import load_dotenv
+import http.client
+import random
+import requests
 
 from typing import Final
 
@@ -8,17 +11,19 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, ContextTypes, filters
 
 from googleapiclient.discovery import build
-import random
 load_dotenv()
 
 # ---------- ----------
 # ---------- settings of Tokens ----------
 TELEGRAM_BOT_TOKEN : Final = os.getenv("TELEGRAM_BOT_TOKEN")
+BOT_USERNAME : Final = os.getenv("BOT_USERNAME")
+
+RANDOM_FACT_TOKEN = os.getenv("RANDOM_FACT_TOKEN")
 YOUTUBE_TOKEN : Final = os.getenv("YOUTUBE_TOKEN") 
 
-BOT_USERNAME = os.getenv("BOT_USERNAME")
-
 youtube = build("youtube", "v3", developerKey=YOUTUBE_TOKEN)
+
+
 
 
 # ---------- commands for the bot ----------
@@ -68,8 +73,26 @@ async def youtube_video(update: Update, Context: ContextTypes.DEFAULT_TYPE):
 
 
 
+def get_random_fact():
+    # -- randomfact api endpoint and connection
+    conn = http.client.HTTPSConnection("trivia-by-api-ninjas.p.rapidapi.com")
 
+    headers = {
+        'x-rapidapi-key': os.getenv("RANDOM_FACT-TOKEN"),
+        'x-rapidapi-host': "trivia-by-api-ninjas.p.rapidapi.com"
+    }
+
+    conn.request("GET", "/v1/trivia", headers=headers)
+
+    res = conn.getresponse()
+    data = res.read()
+
+    return data.decode("utf-8")
     
+
+async def random_fact(update: Update, Context: ContextTypes.DEFAULT_TYPE):
+    fact = get_random_fact()
+    await update.message.reply_text(fact)
 
 
 
@@ -107,8 +130,10 @@ def handle_response(text: str):
         return "sorry, you're own your own... "
     elif "video" in processed_text:
         video_url = get_random_video_youtube()  # Unpack return values
-        if video_url:
-            return video_url
+        return video_url
+    # elif "fact" in processed_text:
+    #     new_fact =  random_fact() 
+    #     return new_fact 
     else:
         return "I don't understand what you wrote."
     
@@ -128,6 +153,7 @@ if __name__ == '__main__':
     app.add_handler(CommandHandler('help', help_command)) # help - to get the list of available commands
     app.add_handler(CommandHandler('custom', custom_command)) # custom command
     app.add_handler(CommandHandler('video', youtube_video)) # video - get a random trending youtube video
+    app.add_handler(CommandHandler('fact', random_fact)) # fact - display a random fact.
 
     # messages
     app.add_handler(MessageHandler(filters.TEXT, handle_message))
