@@ -64,7 +64,7 @@ def get_random_video_youtube():
 
 async def youtube_video(update: Update, Context: ContextTypes.DEFAULT_TYPE):
     video = get_random_video_youtube()
-    await update.message.reply_text(f"Getting random video from YouTube...\n{video}")
+    await update.message.reply_text(f"{video}")
 
 
 
@@ -106,20 +106,17 @@ def handle_response(text: str):
     elif "help" in processed_text:
         return "sorry, you're own your own... "
     elif "video" in processed_text:
-        video_url, error_message = get_random_video_youtube()  # Unpack return values
+        video_url = get_random_video_youtube()  # Unpack return values
         if video_url:
             return video_url
-        else:
-            return error_message
     else:
         return "I don't understand what you wrote."
     
 
 async def error(update: Update, Context: ContextTypes.DEFAULT_TYPE):
-    print(f"Update {update} caused an error... \ncontext:{Context.error}")
+    '''log all errors'''
+    print(f"Update error:\n' {update} '\ncontext:\n'  {Context.error} '. ")
     await update.message.reply_text("an error occurred, please try again.")
-
-
 
 
 if __name__ == '__main__':
@@ -130,7 +127,7 @@ if __name__ == '__main__':
     app.add_handler(CommandHandler('start', start_command)) # start - to start the bot
     app.add_handler(CommandHandler('help', help_command)) # help - to get the list of available commands
     app.add_handler(CommandHandler('custom', custom_command)) # custom command
-    app.add_handler(CommandHandler('video', get_random_video_youtube)) # video - get a random trending youtube video
+    app.add_handler(CommandHandler('video', youtube_video)) # video - get a random trending youtube video
 
     # messages
     app.add_handler(MessageHandler(filters.TEXT, handle_message))
