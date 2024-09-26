@@ -1,8 +1,7 @@
 import os
 from dotenv import load_dotenv
 import http.client
-import random
-import requests
+import random, requests, json
 
 from typing import Final
 
@@ -17,13 +16,8 @@ load_dotenv()
 # ---------- settings of Tokens ----------
 TELEGRAM_BOT_TOKEN : Final = os.getenv("TELEGRAM_BOT_TOKEN")
 BOT_USERNAME : Final = os.getenv("BOT_USERNAME")
-
-RANDOM_FACT_TOKEN = os.getenv("RANDOM_FACT_TOKEN")
+RANDOM_FACT_TOKEN : Final = os.getenv("RANDOM_FACT_TOKEN")
 YOUTUBE_TOKEN : Final = os.getenv("YOUTUBE_TOKEN") 
-
-youtube = build("youtube", "v3", developerKey=YOUTUBE_TOKEN)
-
-
 
 
 # ---------- commands for the bot ----------
@@ -40,6 +34,7 @@ async def help_command(update: Update, Context: ContextTypes.DEFAULT_TYPE, ):
 async def custom_command(update: Update, Context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Hi! Custom command to be implemented")
 
+
 # ---------- Youtube API uses ----------
 # ---------- retrieving the videos ----------
 def get_random_video_youtube():
@@ -47,6 +42,7 @@ def get_random_video_youtube():
     Retrieves a random trending video from YouTube using the YouTube Data API.
     """
     try:
+        youtube = build("youtube", "v3", developerKey=YOUTUBE_TOKEN)
         video_response = youtube.videos().list(
             part='snippet,statistics',
             chart='mostPopular',
@@ -60,7 +56,6 @@ def get_random_video_youtube():
         video = random.choice(video_response['items'])
         video_id = video['id']
         video_url = f"https://www.youtube.com/watch?v={video_id}"
-        
         return video_url
     
     except Exception as e:
@@ -71,29 +66,21 @@ async def youtube_video(update: Update, Context: ContextTypes.DEFAULT_TYPE):
     video = get_random_video_youtube()
     await update.message.reply_text(f"{video}")
 
-
-
+# ---------- random fact generator part ----------
 def get_random_fact():
     # -- randomfact api endpoint and connection
-    conn = http.client.HTTPSConnection("trivia-by-api-ninjas.p.rapidapi.com")
-
-    headers = {
-        'x-rapidapi-key': os.getenv("RANDOM_FACT-TOKEN"),
-        'x-rapidapi-host': "trivia-by-api-ninjas.p.rapidapi.com"
-    }
-
-    conn.request("GET", "/v1/trivia", headers=headers)
-
-    res = conn.getresponse()
-    data = res.read()
-
-    return data.decode("utf-8")
-    
+    api_url = 'https://api.api-ninjas.com/v1/facts?'
+    response = requests.get(api_url, headers={'X-Api-Key': RANDOM_FACT_TOKEN})
+    if response.status_code == requests.codes.ok:
+        data = json.loads(response.text)
+        fact = data[0]["fact"]
+        return fact
+    else:
+        print("Error:", response.status_code, response.text)
 
 async def random_fact(update: Update, Context: ContextTypes.DEFAULT_TYPE):
     fact = get_random_fact()
     await update.message.reply_text(fact)
-
 
 
 # ---  Messages and responses handling -------------------------------- 
@@ -116,7 +103,7 @@ async def handle_message(update: Update, Context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(response)
 
 
-# response
+#  response communication of user
 def handle_response(text: str):
     processed_text = text.lower()
 
@@ -127,13 +114,13 @@ def handle_response(text: str):
     elif "what is your name" in processed_text:
         return "My name is Slim0_1 Bot."
     elif "help" in processed_text:
-        return "sorry, you're own your own... "
+        return ""
     elif "video" in processed_text:
         video_url = get_random_video_youtube()  # Unpack return values
         return video_url
-    # elif "fact" in processed_text:
-    #     new_fact =  random_fact() 
-    #     return new_fact 
+    elif "fact" in processed_text:
+        new_fact =  get_random_fact() 
+        return new_fact 
     else:
         return "I don't understand what you wrote."
     
