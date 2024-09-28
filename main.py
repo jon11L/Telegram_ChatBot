@@ -2,22 +2,24 @@ import os
 from dotenv import load_dotenv
 import http.client
 import random, requests, json
-
 from typing import Final
+
+from video_youtube_api import get_random_video_youtube
 
 import telegram
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, ContextTypes, filters
 
-from googleapiclient.discovery import build
+
 load_dotenv()
+
+
 
 # ---------- ----------
 # ---------- settings of Tokens ----------
 TELEGRAM_BOT_TOKEN : Final = os.getenv("TELEGRAM_BOT_TOKEN")
 BOT_USERNAME : Final = os.getenv("BOT_USERNAME")
-RANDOM_FACT_TOKEN : Final = os.getenv("RANDOM_FACT_TOKEN")
-YOUTUBE_TOKEN : Final = os.getenv("YOUTUBE_TOKEN") 
+RANDOM_FACT_TOKEN : Final = os.getenv("RANDOM_FACT_TOKEN") 
 
 
 # ---------- commands for the bot ----------
@@ -33,33 +35,6 @@ async def help_command(update: Update, Context: ContextTypes.DEFAULT_TYPE, ):
 
 async def custom_command(update: Update, Context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Hi! Custom command to be implemented")
-
-
-# ---------- Youtube API uses ----------
-# ---------- retrieving the videos ----------
-def get_random_video_youtube():
-    """
-    Retrieves a random trending video from YouTube using the YouTube Data API.
-    """
-    try:
-        youtube = build("youtube", "v3", developerKey=YOUTUBE_TOKEN)
-        video_response = youtube.videos().list(
-            part='snippet,statistics',
-            chart='mostPopular',
-            maxResults=25
-        ).execute()
-
-        if not video_response['items']:
-            return None, "No trending videos found."
-
-        # Choose a random video from the results
-        video = random.choice(video_response['items'])
-        video_id = video['id']
-        video_url = f"https://www.youtube.com/watch?v={video_id}"
-        return video_url
-    
-    except Exception as e:
-        return None, f"An error occurred: {str(e)}"
 
 
 async def youtube_video(update: Update, Context: ContextTypes.DEFAULT_TYPE):
@@ -114,7 +89,7 @@ def handle_response(text: str):
     elif "what is your name" in processed_text:
         return "My name is Slim0_1 Bot."
     elif "help" in processed_text:
-        return ""
+        return "i can try to help you."
     elif "video" in processed_text:
         video_url = get_random_video_youtube()  # Unpack return values
         return video_url

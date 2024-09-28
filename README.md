@@ -1,14 +1,12 @@
 # Telegram Chatbot.
 
 ### Project in construction....
-implementing the logic in python.
 
 
-building a telegram chatbot where several similar commands will be available to get random medias, such as: a randomized music, youtube video (perhaps documentary if triggered specific), a news of the day, a fun fact ...
 
 
 ## Description
-Slim_Bot is a Telegram bot that provides users with random trending YouTube videos and interesting facts. It's designed to entertain and inform users through simple commands and natural language interactions.
+Slim_Bot is a Telegram bot that provides users with random trending YouTube videos and interesting facts. It's designed to entertain and inform users through simple commands
 
 ## Features
 - Fetch random trending YouTube videos
@@ -36,6 +34,11 @@ Slim_Bot is a Telegram bot that provides users with random trending YouTube vide
 3. Clone the repository
 4. Install required dependencies:
    ```
+   pip install -r requirements.txt.
+   ```
+   Or optionally install separately the dependencies.
+
+   ```
    pip install python-telegram-bot google-api-python-client requests
    ```
 5. Set up environment variables for your API tokens:
@@ -44,7 +47,7 @@ Slim_Bot is a Telegram bot that provides users with random trending YouTube vide
    - `RANDOM_FACT_TOKEN`
 6. Run the bot:
    ```
-   python your_bot_file.py
+   python3 main.py
    ```
 
 ## Code Structure
@@ -54,10 +57,12 @@ Slim_Bot is a Telegram bot that provides users with random trending YouTube vide
 - Message handling and response generation
 
 ## Future Improvements
-- Implement the custom command functionality
+- Refactoring the project into separate files
+- Spotify or other app to fetch for a random music
+- improve exisiting feature with optional keyword query
 - Add more interactive features
 - Improve error handling and logging
-- Implement user preferences and personalization
+- Testing
 
 ## Contributing
 Contributions, issues, and feature requests are welcome. Feel free to check [issues page] if you want to contribute.
