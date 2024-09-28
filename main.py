@@ -1,10 +1,11 @@
 import os
 from dotenv import load_dotenv
-import http.client
+# import http.client
 import random, requests, json
 from typing import Final
 
 from video_youtube_api import get_random_video_youtube
+from random_fact import get_random_fact
 
 import telegram
 from telegram import Update
@@ -12,8 +13,6 @@ from telegram.ext import Application, CommandHandler, MessageHandler, ContextTyp
 
 
 load_dotenv()
-
-
 
 # ---------- ----------
 # ---------- settings of Tokens ----------
@@ -33,25 +32,14 @@ async def help_command(update: Update, Context: ContextTypes.DEFAULT_TYPE, ):
     await update.message.reply_text(markdown_content, parse_mode=telegram.constants.ParseMode.MARKDOWN )
 
 
-async def custom_command(update: Update, Context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Hi! Custom command to be implemented")
+# async def custom_command(update: Update, Context: ContextTypes.DEFAULT_TYPE):
+#     await update.message.reply_text("Hi! Custom command to be implemented")
 
 
 async def youtube_video(update: Update, Context: ContextTypes.DEFAULT_TYPE):
     video = get_random_video_youtube()
     await update.message.reply_text(f"{video}")
 
-# ---------- random fact generator part ----------
-def get_random_fact():
-    # -- randomfact api endpoint and connection
-    api_url = 'https://api.api-ninjas.com/v1/facts?'
-    response = requests.get(api_url, headers={'X-Api-Key': RANDOM_FACT_TOKEN})
-    if response.status_code == requests.codes.ok:
-        data = json.loads(response.text)
-        fact = data[0]["fact"]
-        return fact
-    else:
-        print("Error:", response.status_code, response.text)
 
 async def random_fact(update: Update, Context: ContextTypes.DEFAULT_TYPE):
     fact = get_random_fact()
@@ -113,7 +101,7 @@ if __name__ == '__main__':
     # commands and description for setting in the botFather if needed
     app.add_handler(CommandHandler('start', start_command)) # start - to start the bot
     app.add_handler(CommandHandler('help', help_command)) # help - to get the list of available commands
-    app.add_handler(CommandHandler('custom', custom_command)) # custom command
+    # app.add_handler(CommandHandler('custom', custom_command)) # custom command
     app.add_handler(CommandHandler('video', youtube_video)) # video - get a random trending youtube video
     app.add_handler(CommandHandler('fact', random_fact)) # fact - display a random fact.
 
