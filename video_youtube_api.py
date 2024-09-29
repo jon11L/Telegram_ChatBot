@@ -31,7 +31,3 @@ def get_random_video_youtube():
     
     except Exception as e:
         return None, f"An error occurred: {str(e)}"
-    
-
-if __name__ == '__main__':
-    get_random_video_youtube()

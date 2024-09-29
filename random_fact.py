@@ -19,4 +19,5 @@ def get_random_fact():
         return fact
     else:
         print("Error:", response.status_code, response.text)
+        return "Sorry, i could not think of any fact right now, ask again later."
     

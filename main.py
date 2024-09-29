@@ -6,6 +6,8 @@ from typing import Final
 
 from video_youtube_api import get_random_video_youtube
 from random_fact import get_random_fact
+from responses import handle_response
+
 
 import telegram
 from telegram import Update
@@ -26,7 +28,7 @@ async def start_command(update: Update, Context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Hi! I am Slim_Bot. I can help you find the latest videos from YouTube.")
 
 
-async def help_command(update: Update, Context: ContextTypes.DEFAULT_TYPE, ):
+async def list_command(update: Update, Context: ContextTypes.DEFAULT_TYPE, ):
     with open("command_list.md", "r") as command_file:
         markdown_content = command_file.read()
     await update.message.reply_text(markdown_content, parse_mode=telegram.constants.ParseMode.MARKDOWN )
@@ -66,32 +68,10 @@ async def handle_message(update: Update, Context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(response)
 
 
-#  response communication of user
-def handle_response(text: str):
-    processed_text = text.lower()
-
-    if "hello" in processed_text:
-        return "Hello!"
-    elif "how are you" in processed_text:
-        return "I am doing well. How about you?"
-    elif "what is your name" in processed_text:
-        return "My name is Slim0_1 Bot."
-    elif "help" in processed_text:
-        return "i can try to help you."
-    elif "video" in processed_text:
-        video_url = get_random_video_youtube()  # Unpack return values
-        return video_url
-    elif "fact" in processed_text:
-        new_fact =  get_random_fact() 
-        return new_fact 
-    else:
-        return "I don't understand what you wrote."
-    
-
 async def error(update: Update, Context: ContextTypes.DEFAULT_TYPE):
     '''log all errors'''
     print(f"Update error:\n' {update} '\ncontext:\n'  {Context.error} '. ")
-    await update.message.reply_text("an error occurred, please try again.")
+    await update.message.reply_text("Oups something happened, please try again.")
 
 
 if __name__ == '__main__':
@@ -100,7 +80,7 @@ if __name__ == '__main__':
 
     # commands and description for setting in the botFather if needed
     app.add_handler(CommandHandler('start', start_command)) # start - to start the bot
-    app.add_handler(CommandHandler('help', help_command)) # help - to get the list of available commands
+    app.add_handler(CommandHandler('command', list_command)) # help - to get the list of available commands
     # app.add_handler(CommandHandler('custom', custom_command)) # custom command
     app.add_handler(CommandHandler('video', youtube_video)) # video - get a random trending youtube video
     app.add_handler(CommandHandler('fact', random_fact)) # fact - display a random fact.
