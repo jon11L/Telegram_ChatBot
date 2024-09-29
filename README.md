@@ -2,22 +2,18 @@
 
 ### Project in construction....
 
-
-
-
 ## Description
 Slim_Bot is a Telegram bot that provides users with random trending YouTube videos and interesting facts. It's designed to entertain and inform users through simple commands
 
 ## Features
 - Fetch random trending YouTube videos
 - Generate random facts
-- Respond to basic conversational inputs
 - Handle both private and group chat interactions
+- Respond to basic conversational inputs
 
 ## Commands
 - `/start`: Initiates the bot and provides a welcome message
 - `/help`: Displays a list of available commands (from a markdown file)
-- `/custom`: Placeholder for future custom commands
 - `/video`: Retrieves and sends a random trending YouTube video
 - `/fact`: Generates and sends a random fact
 
@@ -52,9 +48,9 @@ Slim_Bot is a Telegram bot that provides users with random trending YouTube vide
 
 ## Code Structure
 - Main bot logic and command handlers
+- Message handling and response generation
 - YouTube video fetching function
 - Random fact generation function
-- Message handling and response generation
 
 ## Future Improvements
 - Refactoring the project into separate files
@@ -66,8 +62,6 @@ Slim_Bot is a Telegram bot that provides users with random trending YouTube vide
 
 ## Contributing
 Contributions, issues, and feature requests are welcome. Feel free to check [issues page] if you want to contribute.
-
-
 
 ## License
 This project is [MIT] licensed.
