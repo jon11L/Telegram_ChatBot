@@ -1,4 +1,7 @@
 .chatvenv
 .env
 
+__pycache__/
+
 test_api.py
+music_api.py
