@@ -1,5 +1,5 @@
-from video_youtube_api import get_random_video_youtube
-from random_fact import get_random_fact
+from api_functions.video_youtube_api import get_random_video_youtube
+from api_functions.random_fact import get_random_fact
 from command_list import get_list_command
 
 import random
