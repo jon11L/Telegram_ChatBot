@@ -8,7 +8,7 @@ import random
 async def handle_response(text: str, update, context):
     processed_text = text.lower()
 
-    if "hello" in processed_text:
+    if any(word in processed_text for word in["hello","hey", "what's up", "hi","salut", "hallo"]):
         return  random.choice(["Hello!", "Hey there!", "Hi! How can I assist you?", "Good to see you!"])
     
     elif "how are you" in processed_text:
@@ -28,7 +28,7 @@ async def handle_response(text: str, update, context):
         video_url = get_random_video_youtube()
         return ("here's a video for you:\n\n", video_url)
     
-    elif "fact" in processed_text:
+    elif any(word in processed_text for word in["fact","facts", "something interesting", "share something"]):
         fact =  get_random_fact() 
         return ("Did you know:", fact)
     

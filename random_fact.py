@@ -10,6 +10,7 @@ RANDOM_FACT_TOKEN : Final = os.getenv("RANDOM_FACT_TOKEN")
 
 
 def get_random_fact():
+    ''' retrieve a random fact using ninjaApi '''
     # -- randomfact api endpoint and connection
     api_url = 'https://api.api-ninjas.com/v1/facts?'
     response = requests.get(api_url, headers={'X-Api-Key': RANDOM_FACT_TOKEN})
