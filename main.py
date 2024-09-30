@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 from typing import Final
 
-from responses import handle_response
+from handlers.responses import handle_response
 from video_youtube_api import get_random_video_youtube
 from random_fact import get_random_fact
 from command_list import get_list_command
