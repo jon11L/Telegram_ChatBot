@@ -2,21 +2,18 @@ import os
 from dotenv import load_dotenv
 from typing import Final
 
-from handlers.responses import handle_response
-from video_youtube_api import get_random_video_youtube
-from random_fact import get_random_fact
+from handlers.messages import handle_message
+from api_functions.video_youtube_api import get_random_video_youtube
+from api_functions.random_fact import get_random_fact
 from command_list import get_list_command
 
 import telegram
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, ContextTypes, filters
-
 load_dotenv()
 
 # ---------- settings of Tokens ----------
 TELEGRAM_BOT_TOKEN : Final = os.getenv("TELEGRAM_BOT_TOKEN")
-BOT_USERNAME : Final = os.getenv("BOT_USERNAME")
-
 
 # ----------preset commands for the bot ----------
 async def start(update: Update, Context: ContextTypes.DEFAULT_TYPE):
@@ -36,34 +33,6 @@ async def random_fact(update: Update, Context: ContextTypes.DEFAULT_TYPE):
 async def show_list_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     fact = get_list_command()
     await update.message.reply_text(fact, parse_mode=telegram.constants.ParseMode.MARKDOWN)
-
-# ----- Message type handling  -----
-async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    '''check if the message is private with the bot or from a group chat.
-    The bot only process a response If the message is private or if bot is mentioned in group chat.
-    '''
-    message_type = update.message.chat.type
-    text = update.message.text
-
-    # for debugging purposes
-    print(f"User ({update.message.chat.id}) // {message_type} chat: '{text}'")
-
-    if message_type in ["group", "supergroup"]:
-        if BOT_USERNAME in text:
-            new_text = text.replace(BOT_USERNAME, "").strip()
-            response = await handle_response(new_text, update, context)
-        else:
-            return
-    else:
-        response = await handle_response(text, update, context)
-
-    if isinstance(response, tuple):
-        for message in response:
-            print("Bot:", message)
-            await update.message.reply_text(message)
-    else:
-        print("Bot:", response)
-        await update.message.reply_text(response)
 
 
 # ---------- logs error on server side and display one in the chat ----------- 
