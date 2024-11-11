@@ -51,6 +51,14 @@ async def initialize_bot():
     return bot
 
 
+@app.route("/webhook", methods=["POST"])
+async def webhook():
+    ''' Handle incoming updates message|request from telegram./ '''
+    if request.method == "POST":
+        update = Update.de_json(request.get_json(force=True), bot_app.bot)
+                                
+        bot_app.process_update(update)
+
 
 # ----------preset commands for the bot ----------
 async def start(update: Update, Context: ContextTypes.DEFAULT_TYPE):
@@ -80,24 +88,16 @@ async def error(update: Update, Context: ContextTypes.DEFAULT_TYPE):
     print(f"Update error on:\n' {update} '\n\ncontext:\n'  {Context.error} '. ")
     await update.message.reply_text("Oups something happened, please try again.")
 
-@app.route("/webhook", methods=["POST"])
-async def webhook():
-    ''' Handle incoming updates message|request from telegram./ '''
-    if request.method == "POST":
-        update = Update.de_json(request.get_json(force=True), bot_app.bot)
-                                
-        bot_app.process_update(update)
-
-
 
 if __name__ == '__main__':
     import asyncio
-    app.run(debug=True)
 
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     bot_app = loop.run_until_complete(initialize_bot())
 
     # start the polling thread
-    loop.create_task(bot_app.run_polling(poll_interval=3))
     print("Polling...")
+    loop.create_task(bot_app.run_polling(poll_interval=3))
+
+    app.run(debug=True)
