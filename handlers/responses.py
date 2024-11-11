@@ -6,6 +6,7 @@ import random
 
 
 async def handle_response(text: str, update, context):
+    '''function handle a bot response depending on the  message sent by user.'''
     processed_text = text.lower()
 
     if any(word in processed_text for word in["hello","hey", "what's up", "hi","salut", "hallo"]):
@@ -26,7 +27,7 @@ async def handle_response(text: str, update, context):
     
     elif any(word in processed_text for word in["video","videos","to watch", "youtube"]):
         video_url = get_random_video_youtube()
-        return ("here's a video for you:\n\n", video_url)
+        return ("here's a video for you:", video_url)
     
     elif any(word in processed_text for word in["fact","facts", "something interesting", "share something"]):
         fact =  get_random_fact() 
