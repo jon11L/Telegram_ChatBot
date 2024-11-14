@@ -16,11 +16,13 @@ async def handle_response(text: str, update, context):
         return "I am doing well. How about you?"
     
     elif any(word in processed_text for word in["thanks","thank you"]):
-        return random.choice(["you are welcome.", "my pleasure"])
+        return random.choice(["you are welcome.", "my pleasure", "sure thing", "if i can do anything else?"])
     
     elif "what is your name" in processed_text:
-        return "My name is Slim Bot."
-    
+        return random.choice(["My name is Slim Bot.","Slim", "slim bot",
+                            "slim bot and you?", "My name is Slim Bot. what is yours?",
+                            "i am Slim bot and yourself?"]
+                            )
     elif any(word in processed_text for word in["command","commands", "help"]):
         list_of_commands = get_list_command()
         return list_of_commands
@@ -31,10 +33,14 @@ async def handle_response(text: str, update, context):
     
     elif any(word in processed_text for word in["fact","facts", "something interesting", "share something"]):
         fact =  get_random_fact() 
-        return ("Did you know:", fact)
+        return (random.choice(["Did you know:", "hmm..", "let me think.","oh, there is:"]), fact)
     
     elif "weather" in processed_text:
         return "Sorry, I can't provide weather updates yet, but it's probably nice out!"
-    
+
     else:
-        return "Sorry, i did not quite catch that, could you repeat?"
+        return random.choice(["Sorry, i did not quite catch that, could you repeat?",
+                            "i did not understood", "oh, could you please repeat?", 
+                            "i'm sorry, I don't have the answer to that question, but I can help you find something else.",
+                            "i'm afraid I can't help you with that"]
+                            )

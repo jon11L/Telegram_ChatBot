@@ -23,7 +23,8 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
 
     # for debugging purposes
-    print(f"User ({update.message.chat.id}) // {message_type} chat: '{text}'")
+    # print(f"User ({update.message.chat.id}) // {message_type} chat: '{text}'")
+    print(f"{message_type} chat. -- User({update.message.chat.id}), message: '{text}'")
 
     # check if the message is sent from a group chat or private.
     if message_type in ["group", "supergroup"]:
