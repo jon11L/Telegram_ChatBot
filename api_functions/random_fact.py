@@ -1,12 +1,6 @@
-import os
-from typing import Final
-from dotenv import load_dotenv
-
 import requests, json
+from config import RANDOM_FACT_TOKEN
 
-load_dotenv()
-
-RANDOM_FACT_TOKEN : Final = os.getenv("RANDOM_FACT_TOKEN") 
 
 
 def get_random_fact():
