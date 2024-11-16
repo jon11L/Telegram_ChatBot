@@ -1,11 +1,5 @@
-import asyncio
-import os
-from typing import Final
-
-from contextlib import asynccontextmanager
-from dotenv import load_dotenv
 from fastapi import FastAPI, Request, Response
-
+from contextlib import asynccontextmanager
 import uvicorn
 
 import telegram
@@ -18,22 +12,14 @@ from api_functions.video_youtube_api import get_random_video_youtube
 from api_functions.random_fact import get_random_fact
 from command_list import get_list_command
 
-# from config import Config
-
-load_dotenv()
-
-
-
-# ---------- settings of Tokens ----------
-TELEGRAM_BOT_TOKEN : Final = os.getenv("TELEGRAM_BOT_TOKEN")
-WEB_HOOK : Final = os.getenv("WEB_HOOK_URL")
+from config import TELEGRAM_BOT_TOKEN
+from config import WEB_HOOK_URL
 
 # Set PRODUCTION TO TRUE in production environment 
 PRODUCTION = False
 
 # global bot instance
 bot_app = None
-
 
 
 async def initialize_bot():
@@ -47,39 +33,39 @@ async def initialize_bot():
     ("fact", "Get a random fact")
 ]
     
-    bot = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
-    await bot.bot.set_my_commands(commands)
+    chat_bot = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
+    await chat_bot.bot.set_my_commands(commands)
 
     # list of bot commands and their description for setting in the botFather.
-    bot.add_handler(CommandHandler('start', start)) # start - to start the bot
-    bot.add_handler(CommandHandler('help', show_list_command)) # help - to get the list of available commands
-    bot.add_handler(CommandHandler('video', youtube_video)) # video - get a random trending video from youtube
-    bot.add_handler(CommandHandler('fact', random_fact)) # fact - get a random fact.
+    chat_bot.add_handler(CommandHandler('start', start)) # start - to start the bot
+    chat_bot.add_handler(CommandHandler('help', show_list_command)) # help - to get the list of available commands
+    chat_bot.add_handler(CommandHandler('video', youtube_video)) # video - get a random trending video from youtube
+    chat_bot.add_handler(CommandHandler('fact', random_fact)) # fact - get a random fact.
     
     # messages
-    bot.add_handler(MessageHandler(filters.TEXT, handle_message))
+    chat_bot.add_handler(MessageHandler(filters.TEXT, handle_message))
     #handle Errors
-    bot.add_error_handler(error)
+    chat_bot.add_error_handler(error)
 
     # Initialize the bot
-    await bot.initialize()
+    await chat_bot.initialize()
     print("initializing bot...")
 
-    return bot
+    return chat_bot
 
 
-async def setup_webhook_or_polling(bot: Application):
+async def setup_webhook_or_polling(bot_app: Application):
     """Set polling or webhook depending on the environment."""
 
     # Webhook/polling handler to receive updates from telegram server
     if PRODUCTION:
-        webhook_url = f"{WEB_HOOK}/webhook"
-        await bot.bot.set_webhook(url = webhook_url)# Webhook in production.
+        webhook_url = f"{WEB_HOOK_URL}/webhook"
+        await bot_app.bot.set_webhook(url = webhook_url)# Webhook in production.
         print(f"Webhook set to {webhook_url}")
     else:
-        # start the bot with Polling
-        await bot.start()
-        await bot.updater.start_polling(poll_interval=3) # Polling for local testing/environment
+        # start the bot with Polling 
+        await bot_app.start()
+        await bot_app.updater.start_polling(poll_interval=3) # Polling for local testing/environment
         print("Polling...")
 
 
@@ -115,13 +101,13 @@ app = FastAPI(
 )
 
 
-async def cleanup_bot(bot: Application):
+async def cleanup_bot(bot_app: Application):
     """Cleanup bot resources"""
     try:
         if PRODUCTION:
-            await bot.bot.delete_webhook()
-        await bot.stop()
-        await bot.shutdown()
+            await bot_app.bot.delete_webhook()
+        await bot_app.stop()
+        await bot_app.shutdown()
         print("Bot shutdown complete")
     except Exception as e:
         print(f"Error during cleanup: {e}")

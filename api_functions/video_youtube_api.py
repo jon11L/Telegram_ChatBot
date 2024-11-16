@@ -1,12 +1,7 @@
-import os
-from typing import Final
-from dotenv import load_dotenv
 import random
+
 from googleapiclient.discovery import build
-
-load_dotenv()
-
-YOUTUBE_TOKEN : Final = os.getenv("YOUTUBE_TOKEN") 
+from config import YOUTUBE_TOKEN
 
 def get_random_video_youtube():
     """
