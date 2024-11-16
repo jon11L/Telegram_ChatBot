@@ -106,6 +106,7 @@ async def cleanup_bot(bot_app: Application):
     try:
         if PRODUCTION:
             await bot_app.bot.delete_webhook()
+        await bot_app.updater.stop()
         await bot_app.stop()
         await bot_app.shutdown()
         print("Bot shutdown complete")
