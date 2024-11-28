@@ -23,7 +23,7 @@ def get_random_video_youtube():
         video_id = video['id']
         video_url = f"https://www.youtube.com/watch?v={video_id}"
         return video_url
-    
+
     except Exception as e:
         print(f"An error occurred: {str(e)}")
         return "sorry, it seem like the link did not work"

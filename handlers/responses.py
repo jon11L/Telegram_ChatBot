@@ -1,18 +1,16 @@
-from api_functions.video_youtube_api import get_random_video_youtube
-from api_functions.random_fact import get_random_fact
+from api_clients.video_youtube_api import get_random_video_youtube
+from api_clients.random_fact import get_random_fact
 from command_list import get_list_command
 
 import random
 
 
-async def handle_response(text: str, update, context):
+async def handle_response(text: str):
     '''function handle a bot response depending on the  message sent by user.'''
     processed_text = text.lower()
 
-    if any(word in processed_text for word in["hello","hey", "what's up", "hi","salut", "hallo"]):
-        return  random.choice(["Hello!", "Hey there!", "Hi! How can I assist you?", "Good to see you!"])
     
-    elif "how are you" in processed_text:
+    if "how are you" in processed_text:
         return "I am doing well. How about you?"
     
     elif any(word in processed_text for word in["thanks","thank you"]):
@@ -23,17 +21,20 @@ async def handle_response(text: str, update, context):
                             "slim bot and you?", "My name is Slim Bot. what is yours?",
                             "i am Slim bot and yourself?"]
                             )
-    elif any(word in processed_text for word in["command","commands", "help"]):
+    elif any(word in processed_text for word in["command","commands", "help", "What can you do?"]):
         list_of_commands = get_list_command()
         return list_of_commands
     
     elif any(word in processed_text for word in["video","videos","to watch", "youtube"]):
         video_url = get_random_video_youtube()
-        return ("here's a video for you:", video_url)
+        return ("here's a video for you:", video_url, "I hope you like it.")
     
     elif any(word in processed_text for word in["fact","facts", "something interesting", "share something"]):
         fact =  get_random_fact() 
-        return (random.choice(["Did you know:", "hmm..", "let me think.","oh, there is:"]), fact)
+        return (random.choice(["Did you know?", "hmm...", "let me think.","oh... there is:"]), fact)
+    
+    elif any(word in processed_text for word in["hello","hey", "what's up", "hi","salut", "hallo"]):
+        return  random.choice(["Hello!", "Hey there!", "Hi! How can I assist you?", "Good to see you!"])
     
     elif "weather" in processed_text:
         return "Sorry, I can't provide weather updates yet, but it's probably nice out!"
