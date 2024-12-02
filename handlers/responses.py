@@ -31,8 +31,8 @@ async def handle_response(text: str):
         return ("here's a video for you:", video_url, "I hope you like it.")
     
     elif any(word in processed_text for word in["music","song","listen to something", "tracks"]):
-        track_url = search_track()
-        return ("here's a song for you:", track_url, "I hope you like it.")
+        track_content = search_track()
+        return track_content
     
     elif any(word in processed_text for word in["fact","facts", "something interesting", "share something"]):
         fact =  get_random_fact() 

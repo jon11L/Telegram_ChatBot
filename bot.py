@@ -123,9 +123,11 @@ class TelegramBot:
 
 
     async def get_track(self, update: Update, Context: ContextTypes.DEFAULT_TYPE):
-        track = search_track()
-        if track:
-            await update.message.reply_text(track)
+        track_content = search_track()
+
+        if track_content:
+            for content in track_content:
+                await update.message.reply_text(content)
         else:
             await update.message.reply_text("No tracks found.")
 
