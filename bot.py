@@ -9,9 +9,10 @@ from config import PRODUCTION
 
 # ---------- importing handlers and API functions ----------
 from handlers.messages import handle_message
-from api_clients.video_youtube_api import get_random_video_youtube
-from api_clients.random_fact import get_random_fact
 from command_list import get_list_command
+from api_clients.video_youtube_api import get_random_video_youtube
+from api_clients.music_api import search_tracks
+from api_clients.random_fact import get_random_fact
 
 
 class TelegramBot:
@@ -20,19 +21,20 @@ class TelegramBot:
 
 
     @classmethod
-    async def create_bot(cls):
+    async def initialize_bot(cls):
         self = cls()
-        self.bot_app = await self.initialize_telegram_bot()
+        self.bot_app = await self.bot_setup()
         return self
 
 
-    async def initialize_telegram_bot(self):
+    async def bot_setup(self):
         """This function initializes the bot. Building it, giving the command set up"""
         # global bot_app
         # preset of commands for the bot that the user will see in the chat with '/'
         bot_commands = [
         ("start", "Start the bot"),
         ("help", "Get the list of available commands"),
+        ("music", "Get a random song"),
         ("video", "Get a random trending video from Youtube"),
         ("fact", "Get a random fact")
     ]
@@ -43,9 +45,9 @@ class TelegramBot:
         # list of bot commands and their description for setting in the botFather.
         self.bot_app.add_handler(CommandHandler('start', self.start)) # start - to start the bot
         self.bot_app.add_handler(CommandHandler('help', self.show_list_command)) # help - to get the list of available commands
+        self.bot_app.add_handler(CommandHandler('music', self.get_track)) # provide a random song from spotify
         self.bot_app.add_handler(CommandHandler('video', self.youtube_video)) # video - get a random trending video from youtube
         self.bot_app.add_handler(CommandHandler('fact', self.random_fact)) # fact - get a random fact.
-
         # messages
         self.bot_app.add_handler(MessageHandler(filters.TEXT, handle_message))
         #handle Errors
@@ -67,10 +69,12 @@ class TelegramBot:
         else: 
             await self.setup_polling()
 
+
     async def setup_webhook(self):
         webhook_url = f"{WEB_HOOK_URL}/webhook"
         await self.bot_app.run_webhook(url = webhook_url) # Webhook in production.
         print(f"Webhook set to {webhook_url}")
+
 
     async def setup_polling(self):
         # start the bot with Polling 
@@ -95,13 +99,17 @@ class TelegramBot:
             print(f"Error during cleanup: {e}")
 
 
-
     # ----------preset commands for the bot ----------
     async def start(self, update: Update, Context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(
             "Hi! I am Slim_Bot. \nI can help you find some trendy youtube videos."
             "Share some fun facts and more...\ntype command to see the commands available."
             )
+        
+
+    async def show_list_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        commands = get_list_command()
+        await update.message.reply_text(commands, parse_mode=telegram.constants.ParseMode.MARKDOWN)
 
 
     async def youtube_video(self, update: Update, Context: ContextTypes.DEFAULT_TYPE):
@@ -114,10 +122,12 @@ class TelegramBot:
         await update.message.reply_text(fact)
 
 
-    async def show_list_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
-        commands = get_list_command()
-        await update.message.reply_text(commands, parse_mode=telegram.constants.ParseMode.MARKDOWN)
-
+    async def get_track(self, update: Update, Context: ContextTypes.DEFAULT_TYPE):
+        track = search_tracks()
+        if track:
+            await update.message.reply_text(track)
+        else:
+            await update.message.reply_text("No tracks found.")
 
     # ---------- logs error on server side and display one in the chat ----------- 
     async def error(self, update: Update, Context: ContextTypes.DEFAULT_TYPE):

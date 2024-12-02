@@ -14,7 +14,7 @@ async def handle_response(text: str):
         return "I am doing well. How about you?"
     
     elif any(word in processed_text for word in["thanks","thank you"]):
-        return random.choice(["you are welcome.", "my pleasure", "sure thing", "if i can do anything else?"])
+        return random.choice(["you are welcome.😊", "my pleasure", "sure thing", "if i can do anything else?"])
     
     elif "what is your name" in processed_text:
         return random.choice(["My name is Slim Bot.","Slim", "slim bot",
