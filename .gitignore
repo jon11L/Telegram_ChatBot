@@ -2,6 +2,7 @@
 .env
 
 __pycache__/
+.cache
 
 test_api.py
 temp_main.py

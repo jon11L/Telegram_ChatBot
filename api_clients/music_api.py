@@ -5,6 +5,8 @@ from spotipy.oauth2 import SpotifyClientCredentials
 import random
 from config import SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET # SPOTIFY_REDIRECT_URL
 
+from templates.query_spoti import music_genre
+
 # ---------- for user specfic level data. 
 # Oauth flow authentication/require further authentication(url redirect) ----------- 
 
@@ -26,18 +28,18 @@ def get_spotify_client():
     return spotipy.Spotify(auth_manager=auth_manager)
 
 
-def search_tracks(): # query: str
+def search_track(): # query: str
     """Search for tracks on Spotify."""
     spotify = get_spotify_client()
 
-    query_list = ["Rock", "Raegge", "Rap", "pop", "trip-hop", "NY Blues", "Piano Blues", "Piedmont Blues", "Punk Blues", "Ragtime Blues"]
-    query = random.choice(query_list)
+    # query_list = ["Rock", "Raegge", "Rap", "Elevator", "2-Step", "8bit", "Ambient Ambient Dub", "pop", "trip-hop", "NY Blues", "Piano Blues", "Piedmont Blues", "Punk Blues", "Ragtime Blues"]
+    query = random.choice(music_genre)
     print(f"genre choosen: {query}")
     try:
         results = spotify.search(q=query, type='track', limit=5, offset=random.randint(0, 99))
         tracks = results['tracks']['items']
         track = random.choice(tracks)
-        print(track['external_urls'])
+        print(track['external_urls']['spotify'])
     except Exception as e:
         print(f"something happened could not get a track. \n error: {e}")
 # genre choosen: {query}, 

@@ -1,6 +1,7 @@
 from api_clients.video_youtube_api import get_random_video_youtube
 from api_clients.random_fact import get_random_fact
 from command_list import get_list_command
+from api_clients.music_api import search_track
 
 import random
 
@@ -29,15 +30,19 @@ async def handle_response(text: str):
         video_url = get_random_video_youtube()
         return ("here's a video for you:", video_url, "I hope you like it.")
     
+    elif any(word in processed_text for word in["music","song","listen to something", "tracks"]):
+        track_url = search_track()
+        return ("here's a song for you:", track_url, "I hope you like it.")
+    
     elif any(word in processed_text for word in["fact","facts", "something interesting", "share something"]):
         fact =  get_random_fact() 
         return (random.choice(["Did you know?", "hmm...", "let me think.","oh... there is:"]), fact)
     
-    elif any(word in processed_text for word in["hello","hey", "what's up", "hi","salut", "hallo"]):
-        return  random.choice(["Hello!", "Hey there!", "Hi! How can I assist you?", "Good to see you!"])
+    elif any(word in processed_text for word in["hello","hey", "what's up", "hi","salut", "hallo", "ciao", "yo"]):
+        return  random.choice(["Hello!", "hey","Hey there!", "Hi! How can I assist you?", "Good to see you!", "hey Mate." "Hey mate, what's up?"])
     
     elif "weather" in processed_text:
-        return "Sorry, I can't provide weather updates yet, but it's probably nice out!"
+        return "Sorry, it seems i cannot provide the weather yet, but it's probably nice out there!"
 
     else:
         return random.choice(["Sorry, i did not quite catch that, could you repeat?",

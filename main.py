@@ -67,8 +67,8 @@ if __name__ == '__main__':
 
 # ----------------------------------------------------------------
 # in development mode: spotify functions will be cleaned and sorted.
-# Those functions below serve for Oauthflow authentication with spotify
-#  which is not needed in the end for the meant of the api purpose..
+# Those functions below serve for Oauthflow authentication with spotify:
+# Are not needed in the end due to the api logic..
 
 # import spotipy
 # from spotipy.oauth2 import SpotifyOAuth

@@ -11,7 +11,7 @@ from config import PRODUCTION
 from handlers.messages import handle_message
 from command_list import get_list_command
 from api_clients.video_youtube_api import get_random_video_youtube
-from api_clients.music_api import search_tracks
+from api_clients.music_api import search_track
 from api_clients.random_fact import get_random_fact
 
 
@@ -34,7 +34,7 @@ class TelegramBot:
         bot_commands = [
         ("start", "Start the bot"),
         ("help", "Get the list of available commands"),
-        ("music", "Get a random song"),
+        ("music", "Get a random music track"),
         ("video", "Get a random trending video from Youtube"),
         ("fact", "Get a random fact")
     ]
@@ -45,7 +45,7 @@ class TelegramBot:
         # list of bot commands and their description for setting in the botFather.
         self.bot_app.add_handler(CommandHandler('start', self.start)) # start - to start the bot
         self.bot_app.add_handler(CommandHandler('help', self.show_list_command)) # help - to get the list of available commands
-        self.bot_app.add_handler(CommandHandler('music', self.get_track)) # provide a random song from spotify
+        self.bot_app.add_handler(CommandHandler('music', self.get_track)) # provide a random track from spotify
         self.bot_app.add_handler(CommandHandler('video', self.youtube_video)) # video - get a random trending video from youtube
         self.bot_app.add_handler(CommandHandler('fact', self.random_fact)) # fact - get a random fact.
         # messages
@@ -123,7 +123,7 @@ class TelegramBot:
 
 
     async def get_track(self, update: Update, Context: ContextTypes.DEFAULT_TYPE):
-        track = search_tracks()
+        track = search_track()
         if track:
             await update.message.reply_text(track)
         else:
