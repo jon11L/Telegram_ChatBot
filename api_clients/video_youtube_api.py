@@ -1,28 +1,46 @@
 import random
 
-from googleapiclient.discovery import build
+import googleapiclient.discovery
 from config import YOUTUBE_TOKEN
+
+api_service_name = "youtube"
+api_version = "v3"
+
+video_type = ["sport", "fun", "nature", "news","events", "animals", "discovery",
+            "diy", "travel", "documentary", "music", "science", "technology",
+            "food", "meme", "history", "travel documentary", "popular"]
+
 
 def get_random_video_youtube():
     """
     Retrieves a random trending video from YouTube using the YouTube Data API.
     """
+    query = random.choice(video_type)
+    print("\n","-"*10, "start querying for videos...", "-"*10)
+    print(f" video style: {query}")
+    
     try:
-        youtube = build("youtube", "v3", developerKey=YOUTUBE_TOKEN)
-        video_response = youtube.videos().list(
-            part='snippet,statistics',
-            chart='mostPopular',
-            maxResults=25
-        ).execute()
+        youtube = googleapiclient.discovery.build(api_service_name, api_version, developerKey=YOUTUBE_TOKEN)
 
-        if not video_response['items']:
+        request = youtube.search().list(
+            part="snippet",
+            q=query,
+            type = "video",
+            maxResults=8,
+            ).execute()
+
+        if not request['items']:
             return None, "No trending videos found."
 
+        print("-"*10, len(request['items']), "-"*10)
+        
         # Choose a random video from the results
-        video = random.choice(video_response['items'])
-        video_id = video['id']
+        video = random.choice(request['items'])
+        print(f" video :\n {video} \n")
+        video_id = video['id']['videoId']
+
         video_url = f"https://www.youtube.com/watch?v={video_id}"
-        return video_url
+        return f"Genre:  '{query}'", video_url
 
     except Exception as e:
         print(f"An error occurred: {str(e)}")

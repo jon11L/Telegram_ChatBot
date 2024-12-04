@@ -27,8 +27,10 @@ async def handle_response(text: str):
         return list_of_commands
     
     elif any(word in processed_text for word in["video","videos","to watch", "youtube"]):
-        video_url = get_random_video_youtube()
-        return ("here's a video for you:", video_url, "I hope you like it.")
+        video_content = get_random_video_youtube()
+        video_type = video_content[0]
+        video_url = video_content[1]
+        return (f"here's a video for you:", f"\n {video_type}", video_url)
     
     elif any(word in processed_text for word in["music","song","listen to something", "tracks"]):
         track_content = search_track()

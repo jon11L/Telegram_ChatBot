@@ -307,6 +307,3 @@ music_genre = [
     "Tex-Mex", "Tejano", "Chicano", "Classic", "Conjunto", 
     "Conjunto Progressive", "New Mex", "Tejano"
 ]
-
-
-print(len(music_genre))

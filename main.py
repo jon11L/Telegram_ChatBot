@@ -73,7 +73,6 @@ if __name__ == '__main__':
 # import spotipy
 # from spotipy.oauth2 import SpotifyOAuth
 
-
 # implement callback for spotify authentication and token exchange
 # @app.get("/spotify/callback")
 # async def redirect(): # code: str
@@ -83,7 +82,7 @@ if __name__ == '__main__':
 #     return "return: ok"
 
 
-# allow to give clients code to spotify and be redirected to the specified url for Authorization
+# check for user credential and redirect to Spotify specified URL for authentication.
 # @app.get("/spotify-login")
 # def spotify_login():
 #     sp_oauth = create_spotify_oauth()

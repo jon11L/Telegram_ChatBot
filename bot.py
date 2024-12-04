@@ -113,8 +113,12 @@ class TelegramBot:
 
 
     async def youtube_video(self, update: Update, Context: ContextTypes.DEFAULT_TYPE):
-        video = get_random_video_youtube()
-        await update.message.reply_text(f"{video}")
+        video_content = get_random_video_youtube()
+        if video_content:
+            for content in video_content:
+                await update.message.reply_text(f"{content}")
+        else:
+            await update.message.reply_text("No video found. Please try again")
 
 
     async def random_fact(self, update: Update, Context: ContextTypes.DEFAULT_TYPE):
@@ -124,6 +128,7 @@ class TelegramBot:
 
     async def get_track(self, update: Update, Context: ContextTypes.DEFAULT_TYPE):
         track_content = search_track()
+        print(track_content)
 
         if track_content:
             for content in track_content:
@@ -131,7 +136,8 @@ class TelegramBot:
         else:
             await update.message.reply_text("No tracks found.")
 
-    # ---------- logs error on server side and display one in the chat ----------- 
+
+    # ---------- logs error on server side and display one in the chat ----------- problem: catches all errror, harder to debug
     async def error(self, update: Update, Context: ContextTypes.DEFAULT_TYPE):
         '''Handle errors occuring on bot updates'''
         print("Update error on:", "\n", {update}, "\n", "context:", f"'{Context.error}'. " )
