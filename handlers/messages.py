@@ -1,8 +1,10 @@
 from telegram import Update
 from telegram.ext import ContextTypes
-from handlers.responses import handle_response
+
 
 from config import BOT_USERNAME
+from handlers.responses import handle_response
+
 
 
 # ----- Message type handling  -----
@@ -29,13 +31,14 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             # bot not mentionned in group chat. no further action
             return
     else:
-        response = await handle_response(text) # removed update and context, seemded unncessary for this operation
+        response = await handle_response(text) # removed update and context, seemed unnecessary for this operation
 
     # allow more than a single response to a message.
     if isinstance(response, tuple):
         for message in response:
             print("Bot:", message)
             await update.message.reply_text(message)
+            
     else:
         print("Bot:", response)
         await update.message.reply_text(response)

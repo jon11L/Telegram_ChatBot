@@ -15,6 +15,8 @@ SPOTIFY_CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET')
 SPOTIFY_CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
 # SPOTIFY_REDIRECT_URL = os.getenv('SPOTIFY_REDIRECT_URL') # Not in use finally
 
+WEATHER_CLIENT_SECRET = os.getenv('WEATHER_CLIENT_ID')
+
 WEB_HOOK_URL : Final = os.getenv("WEB_HOOK_URL") # for the telegram communication/updates 
 
 # set to True when application is deployed or in production environment to switch communication . 

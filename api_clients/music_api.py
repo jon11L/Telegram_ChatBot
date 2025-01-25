@@ -19,6 +19,7 @@ from templates.music_genre_list import music_genre
 #         redirect_uri=SPOTIFY_REDIRECT_URL,
 #         scope="user-library-read" # user-read-playback-state,user-read-currently-playing,
 #     )
+#  ---------------------------------------------------------------
 
 def get_spotify_client():
     """Initialize Spotify client using client credentials (no user token required)."""
@@ -29,13 +30,14 @@ def get_spotify_client():
     return spotipy.Spotify(auth_manager=auth_manager)
 
 
-def search_track(): # query: str
+def search_track():
     """Search for tracks on Spotify. 
     with a randomized query to return varied song.
     (- query based on a random music genre 
     -a randomized offset to not only reach the top titles)
     -- Return only one song per request.
     """
+    # gather the autorization credentials with the spotify clientcredentials
     spotify = get_spotify_client()
 
     # ---- preselect a music genre for the query  /in process---------
@@ -53,22 +55,27 @@ def search_track(): # query: str
     # build the query
     # query = f'genre:"{genre}" tag:{tag} year:"{year_range}"' # +year:{year_range}
 
+    # -------- end of trying to improve query --------------------
 
     result = False
     tries = 0
 
-    while result == False:
+    while result == False and tries < 5:
         tries += 1
         genre = random.choice(music_genre)
         print("-"*10, "fetching for a song...", "-"*10)
         print(f"Try N:{tries} with genre:{genre}")
 
         try:
-            query = f'genre:"{genre}"' # +year:{year_range}
-            request = spotify.search(q=query, limit=1, offset=random.randint(0, 99), type='track')
-            # print(request) # debugging purpose
+            query = f'genre:"{genre}"'
 
-            print(f"total result is:  '{request['tracks']['total']}'\n")
+            # ----- request to Spotify API -----
+            request = spotify.search(q=query, limit=5, offset=random.randint(0, 99), type='track')
+            # print(request) # debugging purpose
+            if request['tracks']['total'] == 0:
+                print(f"total result: '{request['tracks']['total']}, NO RESULT'\n")
+            else:
+                print(f"total result: '{request['tracks']['total']}, OK'\n")
             # check if the request returned any song, if not it ask again until when  result is True
             if request['tracks']['total'] != 0:
                 result = True
@@ -89,7 +96,6 @@ def search_track(): # query: str
         release_date : str  = track['album']['release_date'][0:4]
 
         track_info : str  = f"Genre:  '{genre}'\n\nTrack:  {track_name}\nReleased in:  {release_date}\nArtist:  {artist_name}"
-        print(track_info, track_url, "\n\n")
 
         return track_info, track_url
     else:

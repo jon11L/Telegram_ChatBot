@@ -2,12 +2,17 @@ from api_clients.video_youtube_api import get_random_video_youtube
 from api_clients.random_fact import get_random_fact
 from command_list import get_list_command
 from api_clients.music_api import search_track
+from api_clients.weather_api import get_weather_data, extract_city
 
 import random
 
 
 async def handle_response(text: str):
-    '''function handle a bot response depending on the  message sent by user.'''
+    '''function trigger a bot response depending on the  message sent by user.
+    The handle_response function will check if the incoming text is appearing through any given list
+    and return the appropriate response, call a specific function.
+     //Function still in construction and refinement.//
+    '''
     processed_text = text.lower()
 
     
@@ -32,20 +37,27 @@ async def handle_response(text: str):
         video_url = video_content[1]
         return (f"here's a video for you:", f"\n {video_type}", video_url)
     
-    elif any(word in processed_text for word in["music","song","listen to something", "tracks"]):
+    elif any(word in processed_text for word in["music","song","listen to something", "track"]):
         track_content = search_track()
         return track_content
     
     elif any(word in processed_text for word in["fact","facts", "something interesting", "share something"]):
         fact =  get_random_fact() 
         return (random.choice(["Did you know?", "hmm...", "let me think.","oh... there is:"]), fact)
-    
-    elif any(word in processed_text for word in["hello","hey", "what's up", "hi","salut", "hallo", "ciao", "yo"]):
-        return  random.choice(["Hello!", "hey","Hey there!", "Hi! How can I assist you?", "Good to see you!", "hey Mate." "Hey mate, what's up?"])
-    
-    elif "weather" in processed_text:
-        return "Sorry, it seems i cannot provide the weather yet, but it's probably nice out there!"
 
+    elif any(word in processed_text for word in["weather", "forecast", "temperature"]):
+        city = extract_city(processed_text)
+        try:
+            if city:
+                weather_data = get_weather_data(city)
+                return f"{weather_data}"
+        except Exception as e:
+            print(f"something happened could not get the weather for this city. \n error: {e}")
+            return "Unable to get some music at the moment."
+
+    elif any(word in processed_text for word in["hello","hey", "what's up", "hi","salut", "hallo", "ciao", "yo"]):
+        return  random.choice(["Hello!", "hey","Hey there!", "Hi! How can I assist you?", "Good to see you!", "hey Mate.", "Hey mate, what's up?"])
+        
     else:
         return random.choice(["Sorry, i did not quite catch that, could you repeat?",
                             "i did not understood", "oh, could you please repeat?", 
