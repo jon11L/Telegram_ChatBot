@@ -6,4 +6,5 @@ type / in the chat and click directly to use the commands
 /help - display the available commands.
 /music - provide a random song from spotify
 /video - get a trending youtube video
+/movie - get a random movie
 /fact - get a random fact

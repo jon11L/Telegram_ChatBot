@@ -1,8 +1,9 @@
 from api_clients.video_youtube_api import get_random_video_youtube
 from api_clients.random_fact import get_random_fact
 from command_list import get_list_command
-from api_clients.music_api import search_track
+from api_clients.music_api import search_track, extract_genre
 from api_clients.weather_api import get_weather_data, extract_city
+from api_clients.random_movie import get_list_movie
 
 import random
 
@@ -15,13 +16,12 @@ async def handle_response(text: str):
     '''
     processed_text = text.lower()
 
-    
     if "how are you" in processed_text:
         return "I am doing well. How about you?"
-    
+
     elif any(word in processed_text for word in["thanks","thank you"]):
         return random.choice(["you are welcome.😊", "my pleasure", "sure thing", "if i can do anything else?"])
-    
+
     elif "what is your name" in processed_text:
         return random.choice(["My name is Slim Bot.","Slim", "slim bot",
                             "slim bot and you?", "My name is Slim Bot. what is yours?",
@@ -30,22 +30,43 @@ async def handle_response(text: str):
     elif any(word in processed_text for word in["command","commands", "help", "What can you do?"]):
         list_of_commands = get_list_command()
         return list_of_commands
-    
-    elif any(word in processed_text for word in["video","videos","to watch", "youtube"]):
+
+    elif any(word in processed_text for word in["video","videos","short", "youtube"]):
         video_content = get_random_video_youtube()
         video_type = video_content[0]
         video_url = video_content[1]
         return (f"here's a video for you:", f"\n {video_type}", video_url)
+
+    # Calling and returning movie data
+    elif any(word in processed_text for word in["movie", "cinema", "film", "to watch"]):
+        video_content = get_list_movie()
+        return ("here's a movie for you:", video_content)
+        # video_type = video_content[0]
+        # video_url = video_content[1]
+        # return (f"here's a movie for you:", f"\n {video_type}", video_url)
+
+    elif any(word in processed_text for word in["music", "song", "listen to something", "track", "audio"]):
+        genre = None
+        try:
+            genre = extract_genre(processed_text)
+            # if genre:
+            track_content = search_track(genre=genre)
+            # elif genre == None:
+
+            return track_content
+
+        except Exception as e:
+            print(f"something happened could not get any music. \n error: {e}")
+            return "Unable to get some music at the moment."
     
-    elif any(word in processed_text for word in["music","song","listen to something", "track"]):
-        track_content = search_track()
-        return track_content
-    
+
+
     elif any(word in processed_text for word in["fact","facts", "something interesting", "share something"]):
         fact =  get_random_fact() 
         return (random.choice(["Did you know?", "hmm...", "let me think.","oh... there is:"]), fact)
 
-    elif any(word in processed_text for word in["weather", "forecast", "temperature"]):
+
+    elif any(word in processed_text for word in["weather", "forecast", "temperature", "meteo", "quel temps fait il"]):
         city = extract_city(processed_text)
         try:
             if city:
@@ -55,12 +76,36 @@ async def handle_response(text: str):
             print(f"something happened could not get the weather for this city. \n error: {e}")
             return "Unable to get some music at the moment."
 
-    elif any(word in processed_text for word in["hello","hey", "what's up", "hi","salut", "hallo", "ciao", "yo"]):
-        return  random.choice(["Hello!", "hey","Hey there!", "Hi! How can I assist you?", "Good to see you!", "hey Mate.", "Hey mate, what's up?"])
-        
+    elif any(
+        word in processed_text
+        for word in [
+            "hello",
+            "hey",
+            "what's up",
+            "hi",
+            "salut",
+            "hallo",
+            "ciao",
+            "yo",
+            "hola",
+        ]
+    ):
+        return random.choice(
+            [
+                "Hello!",
+                "hey",
+                "Hey there!",
+                "Hi! How can I assist you?",
+                "Good to see you!",
+                "hey Mate.",
+                "Hey mate, what's up?",
+            ]
+        )
+
     else:
         return random.choice(["Sorry, i did not quite catch that, could you repeat?",
                             "i did not understood", "oh, could you please repeat?", 
                             "i'm sorry, I don't have the answer to that question, but I can help you find something else.",
-                            "i'm afraid I can't help you with that"]
-                            )
+                            "i'm afraid I can't help you with that",
+                            "what?",
+                            ])

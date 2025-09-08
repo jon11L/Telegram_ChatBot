@@ -1,4 +1,5 @@
 .chatvenv
+.chvenv
 .env
 
 __pycache__/
