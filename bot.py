@@ -16,7 +16,7 @@ from api_clients.video_youtube_api import get_random_video_youtube
 from api_clients.music_api import search_track
 from api_clients.random_fact import get_random_fact
 from api_clients.weather_api import get_weather_data
-
+from api_clients.random_movie import get_list_movie # new movie api from my other project
 
 
 
@@ -42,6 +42,7 @@ class TelegramBot:
         ("help", "Get the list of available commands"),
         ("music", "Get a random music track"),
         ("video", "Get a random trending video from Youtube"),
+        ("movie", "Get a random movie from cinelib"),
         ("weather", "Get the current weather of the city requested you must specify your city after weather"),
         ("fact", "Get a random fact")
     ]
@@ -54,6 +55,7 @@ class TelegramBot:
             self.bot_app.add_handler(CommandHandler('help', self.show_list_command)) # help - to get the list of available commands
             self.bot_app.add_handler(CommandHandler('music', self.get_track)) # provide a random track from spotify
             self.bot_app.add_handler(CommandHandler('video', self.youtube_video)) # video - get a random trending video from youtube
+            self.bot_app.add_handler(CommandHandler('movie', self.random_movie)) # fact - get a random movie.
             self.bot_app.add_handler(CommandHandler('weather', self.get_weather)) # video - get the weather of the city requested
             self.bot_app.add_handler(CommandHandler('fact', self.random_fact)) # fact - get a random fact.
             # messages
@@ -124,7 +126,6 @@ class TelegramBot:
         print("User typed the command: List Command")
         await update.message.reply_text(commands, parse_mode=telegram.constants.ParseMode.MARKDOWN)
 
-
     async def youtube_video(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         print("User typed the command: Video Youtube")
         video_content = get_random_video_youtube()
@@ -135,12 +136,22 @@ class TelegramBot:
         else:
             await update.message.reply_text("No video found. Please try again")
 
+    # assign new command for retrieving a random movie
+    async def random_movie(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        print("User typed the command: movie")
+        movie_content = get_list_movie()
+        if movie_content:
+            await update.message.reply_text(f"{movie_content}")
+            # for content in movie_content:
+                # await update.message.reply_text(f"{content}")
+                # time.sleep(1)
+        else:
+            await update.message.reply_text("No video found. Please try again")
 
     async def random_fact(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         fact = get_random_fact()
         print("User typed the command: Fact.")
         await update.message.reply_text(fact)
-
 
     async def get_track(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         print("User typed the command: 'music'\n")
@@ -155,9 +166,9 @@ class TelegramBot:
             await update.message.reply_text("No tracks found.")
 
 
-
     async def get_weather(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
 
+        print("User typed the command: weather")
         args = context.args
 
         if not args:

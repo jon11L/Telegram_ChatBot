@@ -16,10 +16,12 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     Message destinated to the bot are then send to response handler to be processed
     '''
     message_type = update.message.chat.type
+    chat_id = update.message.chat.id
+    user_name = update.message.from_user['username']
     text = update.message.text
 
     # for debugging purposes
-    print(f"{message_type} chat. -- User({update.message.chat.id}), message: '{text}'")
+    print(f"\n\n(- message: '{text}')\n- {message_type} chat. -- sender: user'{chat_id}' - username:{user_name}\n")
 
     # check if the message is sent from a group chat or private.
     if message_type in ["group", "supergroup"]:
