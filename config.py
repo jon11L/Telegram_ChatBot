@@ -22,8 +22,8 @@ WEB_HOOK_URL : Final = os.getenv("WEB_HOOK_URL") # for the telegram communicatio
 # set to True when application is deployed or in production environment to switch communication . 
 PRODUCTION : bool = False # False: polling, True: webhook.
 
-USER_CINELIB = os.getenv("USER_CINELIB")
-PW_CINELIB = os.getenv("PW_CINELIB")
+# USER_CINELIB = os.getenv("USER_CINELIB")
+# PW_CINELIB = os.getenv("PW_CINELIB")
 TOKEN_CINELIB = os.getenv("AUTH_TOKEN_CINELIB")
 
 # -------------------------------------------

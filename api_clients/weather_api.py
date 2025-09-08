@@ -15,6 +15,8 @@ def extract_city(text):
         r'forecast (\w{3,})',
         r'temperature [a-z]{2,4} ([\w-]+(?:[\s|-]\w+)*)',
         r'temperature (\w{3,})',
+        r'meteo [a-z]{2,4} ([\w-]+(?:[\s|-]\w+)*)',
+        r'meteo (\w{3,})',
     }
     
     for pattern in text_patterns:
@@ -95,12 +97,13 @@ def format_weather_data(weather_data):
     '''Format the weather data in a readable format'''
 
     return (
-        f"🌍  Here is the weather for:\n\n           {weather_data['city']} ({weather_data['country']})\n\n"
-        f"🌡️  *Temperature*:   {weather_data['temperature']}°C\n"
-        f"🌈  *Conditions*:   {weather_data['description']}\n"
-        f"💧  *Humidity*:   {weather_data['humidity']}%\n"
-        f"🌞  *Daylight*:   {weather_data['daylight_hours']}h:{weather_data['daylight_minutes']}min\n"
-        f"🌅  *sunrise*:   {weather_data['sunrise']}\n"
-        f"🌇  *sunset*:   {weather_data['sunset']}\n"
-        f"🪁 *windspeed*: {weather_data['wind_speed']}Km/h\n" 
+        f"🌍  Here is the weather for:\n\n"
+        f"                   {weather_data['city']} ({weather_data['country']})\n\n"
+        f"🌡️  *Temperature*:  {weather_data['temperature']}°C\n"
+        f"🌈  *Conditions*:      {weather_data['description']}\n"
+        f"💧  *Humidity*:         {weather_data['humidity']}%\n"
+        f"🌞  *Daylight*:          {weather_data['daylight_hours']}h:{weather_data['daylight_minutes']}min\n"
+        f"🌅  *sunrise*:            {weather_data['sunrise']}\n"
+        f"🌇  *sunset*:             {weather_data['sunset']}\n"
+        f"🪁 *windspeed*:      {weather_data['wind_speed']}Km/h\n" 
         )

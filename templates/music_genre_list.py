@@ -52,7 +52,7 @@ music_genre = [
     "Nashville Sound", "Neotraditional Country", "Outlaw Country", "Progressive", 
     "Psychobilly", "Punkabilly", "Red Dirt", "Sertanejo", "Texas County", 
     "Traditional Bluegrass", "Traditional Country", "Truck-Driving Country", 
-    "Urban Cowboy", "Western Swing", "Zydeco",
+    "Urban Cowboy", "Western Swing",
 
     # Dance (EDM)
     "Dance", "Club Dance", "Breakcore", "Breakbeat", "Breakstep", "4-Beat", 

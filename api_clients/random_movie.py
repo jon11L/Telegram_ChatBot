@@ -1,6 +1,6 @@
 import random
 import requests, json
-from config import USER_CINELIB, PW_CINELIB, TOKEN_CINELIB
+from config import TOKEN_CINELIB #, USER_CINELIB, PW_CINELIB
 
 # set up api, get user or Token from movie_lib project.
 # call and get a response to check
@@ -18,9 +18,9 @@ def get_list_movie():
     MAX_PAGE = 500
     page = random.randint(1, MAX_PAGE)
     url = f'http://127.0.0.1:8000/api/v1/movie/list/?page={page}'
-    user = USER_CINELIB
-    password = PW_CINELIB
-    credential = f"{user}: {password}"
+    # user = USER_CINELIB
+    # password = PW_CINELIB
+    # credential = f"{user}: {password}"
 
     # auth=("username", "password")
 
