@@ -3,7 +3,7 @@ from api_clients.random_fact import get_random_fact
 from command_list import get_list_command
 from api_clients.music_api import search_track, extract_genre
 from api_clients.weather_api import get_weather_data, extract_city
-from api_clients.random_movie import get_list_movie
+from api_clients.random_movie import get_random_movie
 
 import random
 
@@ -39,7 +39,8 @@ async def handle_response(text: str):
 
     # Calling and returning movie data
     elif any(word in processed_text for word in["movie", "cinema", "film", "to watch"]):
-        video_content = get_list_movie()
+        # genre = extract_genre(processed_text)
+        video_content = get_random_movie(processed_text=processed_text)
         return ("here's a movie for you:", video_content)
         # video_type = video_content[0]
         # video_url = video_content[1]

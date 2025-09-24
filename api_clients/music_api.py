@@ -37,19 +37,22 @@ def extract_genre(text):
 
     # print(f"preprocessed text: {text}\n")
     text_patterns = {
-        r'song ([\w-]+(?:[\s|-]\w+)*)', # song genre
+        r'song ([\w-]+(?:[\s|-]\w+)?)', # song + word-word
         r'song (\w{3,})',
-        r'music ([\w-]+(?:[\s|-]\w+)*)', # music genre
+        r'music ([\w-]+(?:[\s|-]\w+)?)',
         r'music (\w{3,})',
-        r'audio ([\w-]+(?:[\s|-]\w+)*)',
+        r'audio ([\w-]+(?:[\s|-]\w+)?)',
         r'audio (\w{3,})',
-        r'track ([\w-]+(?:[\s|-]\w+)*)',
+        r'track ([\w-]+(?:[\s|-]\w+)?)',
         r'track (\w{3,})',
     }
     
     for pattern in text_patterns:
         match = re.search(pattern, text, re.IGNORECASE)
         if match:
+            print(f"match: {match}")
+            print(f"match-group: {match.group}")
+            print(f"match-group1: {match.group(1)}")
             return match.group(1)
     
     return None
@@ -71,10 +74,8 @@ def search_track(**kwargs):
     else:
         genre = random.choice(music_genre)
 
-
     result = False
     tries = 0
-
     while result == False and tries < 5:
         tries += 1
         

@@ -16,7 +16,7 @@ from api_clients.video_youtube_api import get_random_video_youtube
 from api_clients.music_api import search_track
 from api_clients.random_fact import get_random_fact
 from api_clients.weather_api import get_weather_data
-from api_clients.random_movie import get_list_movie # new movie api from my other project
+from api_clients.random_movie import get_random_movie # new movie api from my other project
 
 
 
@@ -61,7 +61,7 @@ class TelegramBot:
             # messages
             self.bot_app.add_handler(MessageHandler(filters.TEXT, handle_message))
             #handle Errors
-            self.bot_app.add_error_handler(self.error)
+            # self.bot_app.add_error_handler(self.error)
 
             # Initialize the bot
             print("initializing bot...")
@@ -123,11 +123,11 @@ class TelegramBot:
 
     async def show_list_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         commands = get_list_command()
-        print("User typed the command: List Command")
+        print("User pressed command: 'List Command'")
         await update.message.reply_text(commands, parse_mode=telegram.constants.ParseMode.MARKDOWN)
 
     async def youtube_video(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
-        print("User typed the command: Video Youtube")
+        print("User pressed command: 'Random Video Youtube'")
         video_content = get_random_video_youtube()
         if video_content:
             for content in video_content:
@@ -138,8 +138,8 @@ class TelegramBot:
 
     # assign new command for retrieving a random movie
     async def random_movie(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
-        print("User typed the command: movie")
-        movie_content = get_list_movie()
+        print("User pressed command: 'Movie'")
+        movie_content = get_random_movie()
         if movie_content:
             await update.message.reply_text(f"{movie_content}")
             # for content in movie_content:
@@ -150,11 +150,11 @@ class TelegramBot:
 
     async def random_fact(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         fact = get_random_fact()
-        print("User typed the command: Fact.")
+        print("User pressed command: 'Fact'")
         await update.message.reply_text(fact)
 
     async def get_track(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
-        print("User typed the command: 'music'\n")
+        print("User pressed command: 'Music'\n")
         track_content = search_track()
         print(track_content)
 
@@ -193,7 +193,7 @@ class TelegramBot:
 
 
     # ---------- logs error on server side and display one in the chat ----------- problem: catches all errror, harder to debug
-    async def error(self, update: Update, Context: ContextTypes.DEFAULT_TYPE):
-        '''Handle errors occuring on bot updates'''
-        print("Update error on:", "\n", {update}, "\n", "context:", f"'{Context.error}'. " )
-        await update.message.reply_text("Oups something happened, please try again.")
+    # async def error(self, update: Update, Context: ContextTypes.DEFAULT_TYPE):
+    #     '''Handle errors occuring on bot updates'''
+    #     print("Update error on:", "\n", {update}, "\n", "context:", f"'{Context.error}'. " )
+    #     await update.message.reply_text("Oups something happened, please try again.")
